@@ -1,0 +1,29 @@
+<div *ngIf="animal">
+    <h2>{{ animal.name | uppercase }} Details</h2>
+    <div><span>id: </span>{{animal.id}}</div>
+    
+    <div>
+        <img src="{{animal.photo}}" height="500" />
+        <h3><label>Name:<input [(ngModel)]="animal.name" placeholder="name" /></label></h3>
+        <label>Owner Id:<input [(ngModel)]="animal.ownerId" placeholder="ownerId" /></label>
+        <label>License Number:<input [(ngModel)]="animal.licenseNumber" placeholder="licenseNumber" /></label>
+        <label>Animal Type:<input [(ngModel)]="animal.animalType" placeholder="animalType" /></label>
+        <label>Breed:<input [(ngModel)]="animal.breed" placeholder="breed" /></label>
+        <label>Is Male:<input [(ngModel)]="animal.isMale" placeholder="isMale" /></label>
+        <label>Age:<input [(ngModel)]="animal.age" placeholder="age" /></label>
+        <label>Date Of Birth:<input [(ngModel)]="animal.dateOfBirth" placeholder="dateOfBirth" /></label>
+        <label>Is Vaccinated:<input [(ngModel)]="animal.isVaccinated" placeholder="isVaccinated" /></label>
+        <label>Date Last Vaccinated:<input [(ngModel)]="animal.dateLastVaccinated" placeholder="dateLastVaccinated" /></label>
+        <label>Temperament:<input [(ngModel)]="animal.temperament" placeholder="temperament" /></label>
+        <label>Comments:<input [(ngModel)]="animal.comments" placeholder="comments" /></label>
+        <hr />
+        <!--//        <app-owner-detail [owner]="selectedOwner"></app-owner-detail>
+    animal.ownerId-->
+//        {{animal.ownerId}}
+
+
+    </div>
+    <button (click)="save()">save</button>
+    <button (click)="goBack()">go back</button>
+</div>
+ 

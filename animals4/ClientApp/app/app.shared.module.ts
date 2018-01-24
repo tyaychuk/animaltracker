@@ -10,13 +10,21 @@ import { HomeComponent } from './components/home/home.component';
 import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
 import { CounterComponent } from './components/counter/counter.component';
 
+import { OwnersComponent } from './components/owners/owners.component';
+import { OwnerDetailComponent } from './components/owner-detail/owner-detail.component';
+import { AnimalsComponent } from './components/animals/animals.component';
+import { AnimalDetailComponent } from './components/animal-detail/animal-detail.component';
 @NgModule({
     declarations: [
         AppComponent,
         NavMenuComponent,
         CounterComponent,
         FetchDataComponent,
-        HomeComponent
+        HomeComponent,
+        OwnersComponent,
+        OwnerDetailComponent,
+        AnimalsComponent,
+        AnimalDetailComponent
     ],
     imports: [
         CommonModule,
@@ -27,6 +35,10 @@ import { CounterComponent } from './components/counter/counter.component';
             { path: 'home', component: HomeComponent },
             { path: 'counter', component: CounterComponent },
             { path: 'fetch-data', component: FetchDataComponent },
+            { path: 'owners', component: OwnersComponent },
+            { path: 'owner-detail', component: OwnerDetailComponent },
+            { path: 'animals', component: AnimalsComponent },
+            { path: 'animal-detail', component: AnimalDetailComponent },
             { path: '**', redirectTo: 'home' }
         ])
     ]

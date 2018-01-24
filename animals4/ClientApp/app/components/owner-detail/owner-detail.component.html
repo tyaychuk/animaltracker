@@ -1,0 +1,19 @@
+<div *ngIf="owner">
+    <h2>{{ owner.firstName }}{{ owner.lastName | uppercase }} Details</h2>
+    <div><span>id: </span>{{owner.id}}</div>
+    <div>
+        <label>First Name:<input [(ngModel)]="owner.firstName" placeholder="firstName" /></label>
+        <label>Last Name:<input [(ngModel)]="owner.lastName" placeholder="lastName" /></label>
+        <label>Address Line1:<input [(ngModel)]="owner.addressLine1" placeholder="addressLine1" /></label>
+        <label>City:<input [(ngModel)]="owner.city" placeholder="city" /></label>
+        <label>Municipality:<input [(ngModel)]="owner.municipality" placeholder="municipality" /></label>
+        <label>Phone Cell:<input [(ngModel)]="owner.phoneCell" placeholder="phoneCell" /></label>
+        <label>Phone Home:<input [(ngModel)]="owner.phoneHome" placeholder="phoneHome" /></label>
+        <label>Phone Work:<input [(ngModel)]="owner.phoneWork" placeholder="phoneWork" /></label>
+        <label>email:<input [(ngModel)]="owner.email" placeholder="email" /></label>
+        <label>Alert On Scan:<input [(ngModel)]="owner.alertOnScan" placeholder="alertOnScan" /></label>
+    </div>
+    <button (click)="save()">save</button>
+    <button (click)="goBack()">go back</button>
+</div>
+ 

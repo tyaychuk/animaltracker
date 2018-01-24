@@ -1,0 +1,18 @@
+<h2>My Animals</h2>
+<div>
+    
+    <button (click)="add(animal.name); animal.name=''">
+        add
+    </button>
+</div>
+<ul class="animals">
+    <li *ngFor="let animal of animals"
+        [class.selected]="animal === selectedAnimal"
+        (click)="onSelect(animal)">
+        <button class="delete" title="delete animal"
+                (click)="delete(animal)">x</button>
+        <span>{{animal.id}}</span> {{animal.name}}
+   </li>
+</ul>
+
+<app-animal-detail [animal]="selectedAnimal"></app-animal-detail>

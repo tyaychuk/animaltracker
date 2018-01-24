@@ -1,0 +1,104 @@
+import { Injectable } from '@angular/core';
+import { Owner } from './owner';
+//import { HEROES } from './mock-heroes';
+import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
+import { MessageService } from './message.service';
+//import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpModule, Headers } from '@angular/http';
+import { catchError, map, tap } from 'rxjs/operators';
+
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
+
+@Injectable()
+export class OwnerService {
+  private ownersUrl = 'api/owners';  // URL to web api
+
+/** GET owners from the server */
+getOwners (): Observable<Owner[]> {
+  return this.http.get<Owner[]>(this.ownersUrl)
+    .pipe(
+      tap(owners => this.log(`fetched owners`)),
+      
+      catchError(this.handleError('getOwners', []))
+    );
+}
+
+/** PUT: update the owner on the server */
+updateOwner (owner: Owner): Observable<any> {
+  return this.http.put(this.ownersUrl, owner, httpOptions).pipe(
+    tap(_ => this.log(`updated owner id=${owner.id}`)),
+    catchError(this.handleError<any>('updateOwner'))
+  );
+}
+ /** POST: add a new owner to the server */
+addOwner (owner: Owner): Observable<Owner> {
+  return this.http.post<Owner>(this.ownersUrl, owner, httpOptions).pipe(
+    tap((owner: Owner) => this.log(`added owner w/ id=${owner.id}`)),
+    catchError(this.handleError<Owner>('addOwner'))
+  );
+}
+/* GET owners whose name contains search term */
+searchOwners(term: string): Observable<Owner[]> {
+  if (!term.trim()) {
+    // if not search term, return empty owner array.
+    return of([]);
+  }
+  return this.http.get<Owner[]>(`api/owners/?name=${term}`).pipe(
+    tap(_ => this.log(`found owners matching "${term}"`)),
+    catchError(this.handleError<Owner[]>('searchOwners', []))
+  );
+}
+
+/** GET owner by id. Will 404 if id not found */
+getOwner(id: number): Observable<Owner> {
+  const url = `${this.ownersUrl}/${id}`;
+  return this.http.get<Owner>(url).pipe(
+    tap(_ => this.log(`fetched owner id=${id}`)),
+    catchError(this.handleError<Owner>(`getOwner id=${id}`))
+  );
+}
+
+/** DELETE: delete the owner from the server */
+deleteOwner (owner: Owner | number): Observable<Owner> {
+  const id = typeof owner === 'number' ? owner : owner.id;
+  const url = `${this.ownersUrl}/${id}`;
+
+  return this.http.delete<Owner>(url, httpOptions).pipe(
+    tap(_ => this.log(`deleted owner id=${id}`)),
+    catchError(this.handleError<Owner>('deleteOwner'))
+  );
+}
+
+  /** Log a OwnerService message with the MessageService */
+  private log(message: string) {
+    this.messageService.add('OwnerService: ' + message);
+  }
+
+  /**
+ * Handle Http operation that failed.
+ * Let the app continue.
+ * @param operation - name of the operation that failed
+ * @param result - optional value to return as the observable result
+ */
+private handleError<T> (operation = 'operation', result?: T) {
+  return (error: any): Observable<T> => {
+
+    // TODO: send the error to remote logging infrastructure
+    console.error(error); // log to console instead
+
+    // TODO: better job of transforming error for user consumption
+    this.log(`${operation} failed: ${error.message}`);
+
+    // Let the app keep running by returning an empty result.
+    return of(result as T);
+  };
+}
+
+  constructor(
+    private http: HttpClient,
+    private messageService: MessageService) { }
+
+}

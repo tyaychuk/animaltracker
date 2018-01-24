@@ -1,0 +1,132 @@
+import { Injectable } from '@angular/core';
+import { Animal } from './animal';
+import { Owner } from './animal';
+// import { HEROES } from './mock-animals';
+import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
+import { MessageService } from './message.service';
+// import { HttpClientModule, HttpHeaders } from '@angular/common/http';
+
+//
+//import { HttpClient, HttpHeaders } from '@angular/http';
+import { HttpModule, Headers } from '@angular/http';
+import { catchError, map, tap } from 'rxjs/operator';
+//import { catchError, map, tap } from 'rxjs/operator';
+// import { catchError, map, tap } from 'rxjs/util';
+//import { catchError } from 'rxjs/operator';
+//import { tap } from 'rxjs/operator';
+//import { map } from 'rxjs/operator';
+
+//import 'rxjs/add/operator/map';
+//import 'rxjs/add/operator/tap';
+//import 'rxjs/add/operator/catch';
+
+//import { map } from 'rxjs/operator/map';//
+//import { catch } from 'rxjs/operator/map';
+//import { tap } from 'rxjs/operator/map';
+
+//import 'rxjs/add/observable/empty';
+//import 'rxjs/add/operator/do';
+//mport 'rxjs/add/operator/catch';
+//import { map } from 'rxjs/add/operator/map';
+
+//import { tap } from 'rxjs/operators/tap';
+//port { catchError } from 'rxjs/operators/catchError';
+
+
+const httpOptions = {
+   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+ //   headers: new Headers({ 'Content-Type': 'application/json' })
+};
+
+@Injectable()
+export class AnimalService {
+  private animalsUrl = 'api/animals';  // URL to web api
+
+/** GET animals from the server */
+getAnimals (): Observable<Animal[]> {
+  return this.http.get<Animal[]>(this.animalsUrl)
+    .pipe(
+      tap(animals => this.log(`fetched animals`)),
+      
+      catchError(this.handleError('getAnimals', []))
+    );
+}
+
+/** PUT: update the animal on the server */
+updateAnimal (animal: Animal): Observable<any> {
+  return this.http.put(this.animalsUrl, animal, httpOptions).pipe(
+    tap(_ => this.log(`updated animal id=${animal.id}`)),
+    catchError(this.handleError<any>('updateAnimal'))
+  );
+}
+ /** POST: add a new animal to the server */
+addAnimal (animal: Animal): Observable<Animal> {
+  return this.http.post<Animal>(this.animalsUrl, animal, httpOptions).pipe(
+    tap((animal: Animal) => this.log(`added animal w/ id=${animal.id}`)),
+    catchError(this.handleError<Animal>('addAnimal'))
+  );
+}
+/* GET animals whose name contains search term */
+searchAnimals(term: string): Observable<Animal[]> {
+  if (!term.trim()) {
+    // if not search term, return empty animal array.
+    return of([]);
+  }
+  return this.http.get<Animal[]>(`api/animals/?name=${term}`).pipe(
+    tap(_ => this.log(`found animals matching "${term}"`)),
+    catchError(this.handleError<Animal[]>('searchAnimals', []))
+  );
+}
+
+/** GET animal by id. Will 404 if id not found */
+getAnimal(id: number): Observable<Animal> {
+  const url = `${this.animalsUrl}/${id}`;
+  return this.http.get<Animal>(url).pipe(
+    tap(_ => this.log(`fetched animal id=${id}`)),
+    catchError(this.handleError<Animal>(`getAnimal id=${id}`))
+  );
+}
+
+/** DELETE: delete the animal from the server */
+deleteAnimal (animal: Animal | number): Observable<Animal> {
+  const id = typeof animal === 'number' ? animal : animal.id;
+  const url = `${this.animalsUrl}/${id}`;
+
+  return this.http.delete<Animal>(url, httpOptions).pipe(
+    tap(_ => this.log(`deleted animal id=${id}`)),
+    catchError(this.handleError<Animal>('deleteAnimal'))
+  );
+}
+
+  /** Log a AnimalService message with the MessageService */
+  private log(message: string) {
+    this.messageService.add('AnimalService: ' + message);
+  }
+
+  /**
+ * Handle Http operation that failed.
+ * Let the app continue.
+ * @param operation - name of the operation that failed
+ * @param result - optional value to return as the observable result
+ */
+private handleError<T> (operation = 'operation', result?: T) {
+  return (error: any): Observable<T> => {
+
+    // TODO: send the error to remote logging infrastructure
+    console.error(error); // log to console instead
+
+    // TODO: better job of transforming error for user consumption
+    this.log(`${operation} failed: ${error.message}`);
+
+    // Let the app keep running by returning an empty result.
+    return of(result as T);
+  };
+}
+
+  constructor(
+     private http: HttpClient,
+    // private http: HttpClientModule,
+    private messageService: MessageService) { }
+
+}

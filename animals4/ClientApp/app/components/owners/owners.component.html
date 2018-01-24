@@ -1,0 +1,15 @@
+<h2>My Owners</h2>
+ 
+<ul class="owners">
+    <li *ngFor="let owner of owners"
+        [class.selected]="owner === selectedOwner"
+        (click)="onSelect(owner)">
+        <button class="delete" title="delete owner"
+                (click)="delete(owner)">x</button>
+        <span>{{owner.id}}</span> {{owner.firstName}} {{owner.lastName}}
+
+
+    </li>
+</ul>
+
+<app-owner-detail [owner]="selectedOwner"></app-owner-detail>
